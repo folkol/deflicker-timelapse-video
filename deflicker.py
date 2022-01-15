@@ -39,13 +39,13 @@ while indata.isOpened():
     ret, frame = indata.read()
     if not ret:
         break
-    target_area = frame[-SAMPLE_SIZE:]
+    target_area = frame[-SAMPLE_SIZE:, -SAMPLE_SIZE:]
     sample_area_brightness = target_area.sum() / target_area.size
     if target_brightness is None:
         target_brightness = sample_area_brightness
     gamma = estimate_gamma(sample_area_brightness, target_brightness)
     adjusted_frame = adjust_gamma(frame, gamma)
-    # adjusted_frame[-SAMPLE_SIZE:, -SAMPLE_SIZE:] = [255, 0, 0]
+    adjusted_frame[-SAMPLE_SIZE::2, -SAMPLE_SIZE::2] = [255, 0, 0]
     output.write(adjusted_frame)
 
 indata.release()
